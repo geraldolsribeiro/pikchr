@@ -177,6 +177,7 @@ static const PNum pik_hdg_angle[] = {
 #define FN_MIN    4
 #define FN_SIN    5
 #define FN_SQRT   6
+#define FN_ATAN2  7
 
 /* Text position and style flags.  Stored in PToken.eCode so limited
 ** to 15 bits. */
@@ -3980,6 +3981,7 @@ static PNum pik_func(Pik *p, PToken *pFunc, PNum x, PNum y){
     case FN_COS:  v = cos(x);          break;
     case FN_INT:  v = rint(x);         break;
     case FN_SIN:  v = sin(x);          break;
+    case FN_ATAN2: v = atan2(x,y);     break;
     case FN_SQRT:
       if( x<0.0 ){
         pik_error(p, pFunc, "sqrt of negative value");
@@ -4438,6 +4440,7 @@ static const PikWord pik_keywords[] = {
   { "as",         2,   T_AS,        0,         0        },
   { "assert",     6,   T_ASSERT,    0,         0        },
   { "at",         2,   T_AT,        0,         0        },
+  { "atan2",      5,   T_FUNC2,     FN_ATAN2,  0        },
   { "behind",     6,   T_BEHIND,    0,         0        },
   { "below",      5,   T_BELOW,     0,         0        },
   { "between",    7,   T_BETWEEN,   0,         0        },

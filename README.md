@@ -10,3 +10,7 @@ to provide a convenient means of showing diagrams.
 Visit the [home page][3] for more information
 
 [3]: https://pikchr.org/home/doc/trunk/homepage.md
+
+See also the [pikchr examples][4] from Geraldo Ribeiro
+
+[4]: https://geraldo.dev/til/pikchr.html

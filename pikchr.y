@@ -969,6 +969,7 @@ static const struct { const char *zName; PNum val; } aBuiltin[] = {
   { "movewid",     0.5   },
   { "ovalht",      0.5   },
   { "ovalwid",     1.0   },
+  { "pi",          M_PI  },
   { "scale",       1.0   },
   { "textht",      0.5   },
   { "textwid",     0.75  },

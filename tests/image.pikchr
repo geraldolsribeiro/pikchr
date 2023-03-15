@@ -1,0 +1,10 @@
+#down
+box width 1 height 1
+image "monkey_on_64x64.png" width 64px height 64px 
+box width 1 height 1
+image "monkey_on_64x64.png" width 32px height 32px
+box width 1 height 1
+image "monkey_on_64x64.png" width 1 height 1
+box width 1 height 1
+image "monkey_on_64x64.png"
+

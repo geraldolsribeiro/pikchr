@@ -45,3 +45,7 @@ test:	pikchr
 
 clean:	
 	rm -f pikchr pikchr.c pikchr.h pikchr.out lemon out.html
+
+test_image: pikchr
+	./pikchr --svg-only tests/image.pikchr > a.svg
+

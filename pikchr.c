@@ -3732,6 +3732,7 @@ static void boxFit(Pik *p, PObj *pObj, PNum w, PNum h){
   if( h>0 ) pObj->h = h;
   UNUSED_PARAMETER(p);
 }
+
 static void boxRender(Pik *p, PObj *pObj){
   PNum w2 = 0.5*pObj->w;
   PNum h2 = 0.5*pObj->h;
@@ -3784,6 +3785,37 @@ static void boxRender(Pik *p, PObj *pObj){
     pik_append(p,"\" />\n", -1);
   }
   pik_append_txt(p, pObj, 0);
+}
+
+static void imageInit(Pik *p, PObj *pObj){
+  pObj->w = pik_value(p, "boxwid",6,0);
+  pObj->h = pik_value(p, "boxht",5,0);
+  pObj->rad = pik_value(p, "boxrad",6,0);
+}
+
+static PPoint imageOffset(Pik *p, PObj *pObj, int cp){
+  pik_size_to_fit(p, &pObj->errTok,3);
+  return boxOffset(p, pObj, cp);
+}
+
+static void imageRender(Pik *p, PObj *pObj){
+  if( p->nErr ) return;
+  if( pObj->nTxt==0 ) return;
+
+  PNum w2 = 0.5*pObj->w;
+  PNum h2 = 0.5*pObj->h;
+  PPoint pt = pObj->ptAt;
+
+  if( pObj->aTxt->n >= 2 && pObj->aTxt->z[0]== '"' ) {
+    pik_append(p,"<image href=",-1);
+    pik_append(p,pObj->aTxt->z,pObj->aTxt->n);
+    pik_append_x(p, " x=\"", pt.x-w2, "\"");
+    pik_append_y(p, " y=\"", pt.y+h2, "\"");
+    pik_append_dis(p, " width=\"", pObj->w, "\"");
+    pik_append_dis(p, " height=\"", pObj->h, "\" ");
+    pik_append_style(p,pObj,3);
+    pik_append(p,"\" />\n", -1);
+  }
 }
 
 /* Methods for the "circle" class */
@@ -4357,6 +4389,17 @@ static const PClass aClass[] = {
       /* xOffset */       fileOffset,
       /* xFit */          fileFit,
       /* xRender */       fileRender 
+   },
+   {  /* name */          "image",
+      /* isline */        0,
+      /* eJust */         0,
+      /* xInit */         imageInit,
+      /* xNumProp */      0,
+      /* xCheck */        0,
+      /* xChop */         0,
+      /* xOffset */       imageOffset,
+      /* xFit */          0,
+      /* xRender */       imageRender 
    },
    {  /* name */          "line",
       /* isline */        1,
@@ -7681,6 +7724,7 @@ char *pikchr(
 #if 0
   pik_parserTrace(stdout, "parser: ");
 #endif
+
   pik_tokenize(&s, &s.sIn, &sParse, 0);
   if( s.nErr==0 ){
     PToken token;
@@ -7969,4 +8013,4 @@ int Pikchr_Init(Tcl_Interp *interp){
 #endif /* PIKCHR_TCL */
 
 
-#line 7997 "pikchr.c"
+#line 8041 "pikchr.c"

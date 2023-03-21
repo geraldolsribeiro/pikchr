@@ -3818,6 +3818,62 @@ static void imageRender(Pik *p, PObj *pObj){
   }
 }
 
+static void linkInit(Pik *p, PObj *pObj){
+  pObj->w = pik_value(p, "boxwid",6,0);
+  pObj->h = pik_value(p, "boxht",5,0);
+  pObj->rad = pik_value(p, "boxrad",6,0);
+  pObj->fill = 0x00ffff;
+}
+
+static PPoint linkOffset(Pik *p, PObj *pObj, int cp){
+  pik_size_to_fit(p, &pObj->errTok,3);
+  return boxOffset(p, pObj, cp);
+}
+
+static void linkRender(Pik *p, PObj *pObj){
+  PNum w2 = 0.5*pObj->w;
+  PNum h2 = 0.5*pObj->h;
+  PNum rad = pObj->rad;
+  PPoint pt = pObj->ptAt;
+  
+  // id label url
+  if( pObj->nTxt != 3 ) { return; }
+
+  char id[24];
+  char label[256];
+  char url[256];
+  memset(id,0,sizeof(id));
+  memset(label,0,sizeof(label));
+  memset(url,0,sizeof(url));
+  strncpy(label, pObj->aTxt[1].z, pObj->aTxt[1].n );
+  strncpy(url, pObj->aTxt[2].z, pObj->aTxt[2].n );
+
+  pik_append(p,"<a href=",-1);
+  pik_append(p,url,-1);
+  pik_append(p," title=",-1);
+  pik_append(p,label,-1);
+  pik_append(p," target=\"_blank\"",-1);
+  pik_append(p,">\n",-1);
+   
+  if( pObj->sw>0.0 ){
+    pik_append_xy(p,"<path d=\"M", pt.x-w2,pt.y-h2);
+    pik_append_xy(p,"L", pt.x+w2,pt.y-h2);
+    pik_append_xy(p,"L", pt.x+w2,pt.y+h2);
+    pik_append_xy(p,"L", pt.x-w2,pt.y+h2);
+    pik_append(p,"Z\" ",-1);
+    pik_append_style(p,pObj,3);
+    pik_append(p,"\" />\n", -1);
+  }
+
+  /* strncpy(pObj->aTxt[0].z,"\"\"\0",3); */
+  /* strncpy(pObj->aTxt[2].z,"\"\"\0",3); */
+  pObj->aTxt[0].n = 0;
+  pObj->aTxt[2].n = 0;
+  pik_append_txt(p, pObj, 0);
+
+  pik_append(p,"</a>\n",-1);
+}
+
 /* Methods for the "circle" class */
 static void circleInit(Pik *p, PObj *pObj){
   pObj->w = pik_value(p, "circlerad",9,0)*2;
@@ -4411,6 +4467,17 @@ static const PClass aClass[] = {
       /* xOffset */       lineOffset,
       /* xFit */          0,
       /* xRender */       splineRender
+   },
+   {  /* name */          "link",
+      /* isline */        0,
+      /* eJust */         0,
+      /* xInit */         linkInit,
+      /* xNumProp */      0,
+      /* xCheck */        0,
+      /* xChop */         0,
+      /* xOffset */       linkOffset,
+      /* xFit */          0,
+      /* xRender */       linkRender 
    },
    {  /* name */          "move",
       /* isline */        1,
@@ -8013,4 +8080,4 @@ int Pikchr_Init(Tcl_Interp *interp){
 #endif /* PIKCHR_TCL */
 
 
-#line 8041 "pikchr.c"
+#line 8108 "pikchr.c"

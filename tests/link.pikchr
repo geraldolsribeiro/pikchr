@@ -1,0 +1,10 @@
+down
+box width 1 height 1
+link "1" "Google" "https://google.com" width 64px height 64px 
+box width 1 height 1
+link "2" "Disney" "https://disney.com" width 32px height 32px
+box width 1 height 1
+link "3" "Amazon" "https://amazon.com" width 1 height 1 fill blue
+box width 1 height 1
+link "https://geraldo.dev"
+

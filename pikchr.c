@@ -3806,6 +3806,24 @@ static void imageRender(Pik *p, PObj *pObj){
   PNum h2 = 0.5*pObj->h;
   PPoint pt = pObj->ptAt;
 
+  // filename, URL(optional)
+  if( pObj->nTxt < 1 ) { return; }
+
+  char filename[256];
+  memset(filename,0,sizeof(filename));
+
+  strncpy(filename, pObj->aTxt[1].z, pObj->aTxt[1].n );
+  if( pObj->nTxt == 2 ) {
+    char url[256];
+    memset(url,0,sizeof(url));
+    strncpy(url, pObj->aTxt[1].z, pObj->aTxt[1].n );
+
+    pik_append(p,"<a href=",-1);
+    pik_append(p,url,-1);
+    pik_append(p," target=\"_blank\" pointer-events=\"visiblePainted\"",-1);
+    pik_append(p,">\n",-1);
+  }
+
   if( pObj->aTxt->n >= 2 && pObj->aTxt->z[0]== '"' ) {
     pik_append(p,"<image href=",-1);
     pik_append(p,pObj->aTxt->z,pObj->aTxt->n);
@@ -3816,6 +3834,11 @@ static void imageRender(Pik *p, PObj *pObj){
     pik_append_style(p,pObj,3);
     pik_append(p,"\" />\n", -1);
   }
+
+  if( pObj->nTxt == 2 ) {
+    pik_append(p,"</a>\n",-1);
+  }
+
 }
 
 static void linkInit(Pik *p, PObj *pObj){
@@ -3833,10 +3856,9 @@ static PPoint linkOffset(Pik *p, PObj *pObj, int cp){
 static void linkRender(Pik *p, PObj *pObj){
   PNum w2 = 0.5*pObj->w;
   PNum h2 = 0.5*pObj->h;
-  PNum rad = pObj->rad;
   PPoint pt = pObj->ptAt;
   
-  // id label url
+  // id, label, url
   if( pObj->nTxt != 3 ) { return; }
 
   char id[24];
@@ -3852,7 +3874,7 @@ static void linkRender(Pik *p, PObj *pObj){
   pik_append(p,url,-1);
   pik_append(p," title=",-1);
   pik_append(p,label,-1);
-  pik_append(p," target=\"_blank\"",-1);
+  pik_append(p," target=\"_blank\" pointer-events=\"visiblePainted\"",-1);
   pik_append(p,">\n",-1);
    
   if( pObj->sw>0.0 ){
@@ -3865,10 +3887,9 @@ static void linkRender(Pik *p, PObj *pObj){
     pik_append(p,"\" />\n", -1);
   }
 
-  /* strncpy(pObj->aTxt[0].z,"\"\"\0",3); */
-  /* strncpy(pObj->aTxt[2].z,"\"\"\0",3); */
-  pObj->aTxt[0].n = 0;
-  pObj->aTxt[2].n = 0;
+  // keep only the 2nd text centered
+  pObj->aTxt[0].n = 0; // ignore 1st text
+  pObj->aTxt[2].n = 0; // ignore 3rd text
   pik_append_txt(p, pObj, 0);
 
   pik_append(p,"</a>\n",-1);
@@ -8080,4 +8101,4 @@ int Pikchr_Init(Tcl_Interp *interp){
 #endif /* PIKCHR_TCL */
 
 
-#line 8108 "pikchr.c"
+#line 8129 "pikchr.c"
